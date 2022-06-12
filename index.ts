@@ -13,6 +13,43 @@ const router = new Router();
 const PORT = Deno.env.get("PORT") || "8080";
 
 router
+  .get("/:botToken/chats", async (ctx) => {
+    const { botToken } = ctx.params;
+
+    if (!botToken) {
+      ctx.response.status = Status.BadRequest;
+      ctx.response.body = "Missing parameters";
+      return;
+    }
+
+    const tgResponse = await ky.get(
+      `https://api.telegram.org/bot${botToken}/getUpdates?limit=10`,
+    ).json() as {
+      ok: boolean;
+      result: Array<{
+        update_id: number;
+        message: {
+          chat: {
+            id: number;
+            name: string;
+            title?: string;
+            username?: string;
+            type: string;
+          };
+        };
+      }>;
+    };
+    const updates = tgResponse.result.map(({ message }) => {
+      return `${message.chat.type} - ${
+        message.chat.title || message.chat.username || ""
+      } - ${message.chat.id}`;
+    });
+
+    ctx.response.body = [
+      "Title - Username - chatId",
+      ...updates,
+    ].join("\n");
+  })
   .post("/:botToken/:chatId", async (ctx) => {
     const { botToken, chatId } = ctx.params;
     const query = helpers.getQuery(ctx);
@@ -46,10 +83,7 @@ router
       json: payload,
     });
 
-    ctx.response.body = {
-      status: "OK",
-      data: tgResponse.json(),
-    };
+    ctx.response.body = await tgResponse.json();
   })
   .get("/", (ctx) => {
     ctx.response.body =
@@ -62,7 +96,10 @@ app.use(async (ctx, next) => {
   } catch (err) {
     console.error(err);
     ctx.response.status = err.status || 500;
-    ctx.response.body = err.message || "Internal Server Error";
+    ctx.response.body = {
+      ok: false,
+      message: err.message || "Internal Server Error",
+    };
   }
 });
 app.use(router.routes());

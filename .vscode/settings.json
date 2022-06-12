@@ -7,6 +7,5 @@
   "deno.lint": true,
   "deno.suggest.completeFunctionCalls": true,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "denoland.vscode-deno",
-  "[typescript]": { "editor.defaultFormatter": "denoland.vscode-deno" },
+  "[typescript]": { "editor.defaultFormatter": "denoland.vscode-deno" }
 }
