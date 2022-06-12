@@ -1,6 +1,6 @@
 # telegram-incoming-webhook
 
-Send messages to a Telegram channel easily.
+Send messages to a Telegram chat easily.
 
 ## Usage
 
@@ -10,7 +10,13 @@ Send messages to a Telegram channel easily.
 $ curl -X POST -H "Content-Type: application/json" -d '{"text":"Hello, world!"}' https://tiw.deno.dev/<botToken>/<chatId>
 ```
 
-The payload will be formatted and sent to the designated channel.
+The payload will be formatted and sent to the designated chat.
+
+### Send normal message
+
+```
+$ curl -X POST -d 'Message' https://tiw.deno.dev/<botToken>/<chatId>
+```
 
 ### Send markdown message
 
@@ -19,8 +25,6 @@ $ curl -X POST https://tiw.deno.dev/<botToken>/<chatId>?parse_mode=MarkdownV2 -d
 _italic \\*text_
 '
 ```
-
-The payload will be sent as is to the designated channel.
 
 ## How to get the `chatId`
 
