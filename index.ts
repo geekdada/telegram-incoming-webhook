@@ -28,27 +28,11 @@ router
       ok: boolean;
       result: Array<{
         update_id: number;
-        message: {
-          chat: {
-            id: number;
-            name: string;
-            title?: string;
-            username?: string;
-            type: string;
-          };
-        };
       }>;
     };
-    const updates = tgResponse.result.map(({ message }) => {
-      return `${message.chat.type} - ${
-        message.chat.title || message.chat.username || ""
-      } - ${message.chat.id}`;
-    });
+    const updates = tgResponse.result.map((obj) => JSON.stringify(obj));
 
-    ctx.response.body = [
-      "Title - Username - chatId",
-      ...updates,
-    ].join("\n");
+    ctx.response.body = updates.join("\n");
   })
   .post("/:botToken/:chatId", async (ctx) => {
     const { botToken, chatId } = ctx.params;
