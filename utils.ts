@@ -1,8 +1,8 @@
-export const formatJSON = (json: Record<string, any>): string => {
+export const formatJSON = (json: Record<string, unknown>): string => {
   let result = "";
 
   for (const key in json) {
-    if (json.hasOwnProperty(key)) {
+    if (key in json) {
       const value = json[key];
       result += `<b>${key}</b>: ${value}\n`;
     }

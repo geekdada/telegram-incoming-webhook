@@ -1,10 +1,5 @@
-import ky from "https://cdn.skypack.dev/ky?dts";
-import {
-  Application,
-  helpers,
-  Router,
-  Status,
-} from "https://deno.land/x/oak@v10.6.0/mod.ts";
+import ky from "ky";
+import { Application, helpers, Router, Status } from "$oak/mod.ts";
 
 import { formatJSON } from "./utils.ts";
 
@@ -70,8 +65,9 @@ router
     ctx.response.body = await tgResponse.json();
   })
   .get("/", (ctx) => {
-    ctx.response.body =
-      "Go to https://github.com/geekdada/telegram-incoming-webhook for more info.";
+    ctx.response.body = `<body>
+      Go to <a href="https://github.com/geekdada/telegram-incoming-webhook">https://github.com/geekdada/telegram-incoming-webhook</a> for more info.
+      </body>`;
   });
 
 app.use(async (ctx, next) => {
