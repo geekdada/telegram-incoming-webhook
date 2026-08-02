@@ -75,10 +75,11 @@ app.use(async (ctx, next) => {
     await next();
   } catch (err) {
     console.error(err);
-    ctx.response.status = err.status || 500;
+    const error = err as { status?: number; message?: string };
+    ctx.response.status = error.status || 500;
     ctx.response.body = {
       ok: false,
-      message: err.message || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     };
   }
 });
