@@ -17,10 +17,10 @@ export const formatJSON = (
 
         if (isKeyIndex) {
           result += `${" ".repeat(indent)}<code>#${Number(key) + 1}</code>\n`;
-          result += formatJSON(value as Record<string, any>, indent);
+          result += formatJSON(value as Record<string, unknown>, indent);
         } else {
           result += `${" ".repeat(indent)}<b>${key}</b>:\n`;
-          result += formatJSON(value as Record<string, any>, indent + 4);
+          result += formatJSON(value as Record<string, unknown>, indent + 4);
         }
 
         continue;

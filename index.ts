@@ -1,5 +1,5 @@
 import ky from "ky";
-import { Application, helpers, Router, Status } from "$oak/mod.ts";
+import { Application, Router, Status } from "@oak/oak";
 
 import { formatJSON } from "./utils.ts";
 
@@ -31,8 +31,7 @@ router
   })
   .post("/:botToken/:chatId", async (ctx) => {
     const { botToken, chatId } = ctx.params;
-    const query = helpers.getQuery(ctx);
-    const bodyParser = ctx.request.body({ type: "text" });
+    const parseMode = ctx.request.url.searchParams.get("parse_mode") || "HTML";
 
     if (!botToken || !chatId) {
       ctx.response.status = Status.BadRequest;
@@ -40,12 +39,12 @@ router
       return;
     }
 
-    const requestBodyString = await bodyParser.value;
+    const requestBodyString = await ctx.request.body.text();
     let formattedBody;
 
     try {
       formattedBody = formatJSON(
-        JSON.parse(requestBodyString) as Record<string, any>,
+        JSON.parse(requestBodyString) as Record<string, unknown>,
       );
     } catch (_) {
       formattedBody = requestBodyString;
@@ -55,7 +54,7 @@ router
     const payload = {
       chat_id: chatId,
       text: formattedBody,
-      parse_mode: query.parse_mode || "HTML",
+      parse_mode: parseMode,
     };
 
     const tgResponse = await ky.post(api, {

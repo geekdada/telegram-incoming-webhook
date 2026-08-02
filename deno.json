@@ -1,6 +1,12 @@
 {
+  "deploy": {
+    "runtime": {
+      "type": "dynamic",
+      "entrypoint": "./index.ts"
+    }
+  },
   "imports": {
-    "ky": "https://esm.sh/ky@^1.1.0",
-    "$oak/": "https://deno.land/x/oak@v12.6.0/"
+    "@oak/oak": "jsr:@oak/oak@^17.2.0",
+    "ky": "npm:ky@^2.0.2"
   }
 }
